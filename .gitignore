@@ -17,3 +17,4 @@ public/uploads/*
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+.claude/

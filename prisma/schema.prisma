@@ -1,0 +1,216 @@
+// Arthomoro Jaya Sentosa — Studio & Galeri Patung
+// SQLite for lightweight deployment, swappable to PostgreSQL by changing provider.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// -------- Auth + RBAC --------
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  permissions String   @default("[]") // JSON array of permission keys
+  users       User[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  avatar    String?
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  isActive  Boolean  @default(true)
+  lastLogin DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  audits    AuditLog[]
+  inquiriesAssigned Inquiry[] @relation("assignee")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  target    String?
+  meta      String?
+  ip        String?
+  createdAt DateTime @default(now())
+}
+
+// -------- Content --------
+model Artwork {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  title           String
+  description     String
+  artist          String?
+  material        String
+  category        String
+  style           String?
+  sizeLabel       String?  // Miniatur | Meja | Manusia | Monumental
+  height          String?
+  width           String?
+  depth           String?
+  weight          String?
+  year            Int?
+  status          String   @default("AVAILABLE_PREORDER") // GALLERY | SOLD | AVAILABLE_PREORDER
+  priceRangeMin   Int?
+  priceRangeMax   Int?
+  productionWeeks Int?
+  tags            String   @default("[]")
+  coverImage      String
+  images          String   @default("[]") // JSON array
+  featured        Boolean  @default(false)
+  published       Boolean  @default(true)
+  views           Int      @default(0)
+  likes           Int      @default(0)
+  seoTitle        String?
+  seoDescription  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  excerpt     String
+  content     String
+  category    String
+  tags        String   @default("[]")
+  coverImage  String
+  author      String
+  readMinutes Int      @default(5)
+  views       Int      @default(0)
+  published   Boolean  @default(true)
+  publishedAt DateTime?
+  seoTitle    String?
+  seoDescription String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  client      String
+  clientType  String   @default("Swasta") // Pemerintah | Swasta | Personal
+  location    String
+  year        Int
+  category    String
+  material    String
+  dimensions  String?
+  description String
+  challenge   String?
+  solution    String?
+  duration    String?
+  coverImage  String
+  images      String   @default("[]")
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id              String   @id @default(cuid())
+  name            String
+  position        String?
+  city            String?
+  avatar          String?
+  rating          Int      @default(5)
+  message         String
+  category        String?
+  verifiedOrder   Boolean  @default(false)
+  handoverPhoto   String?
+  featured        Boolean  @default(false)
+  status          String   @default("PENDING") // PENDING | APPROVED | REJECTED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// -------- Customer Interactions --------
+model Inquiry {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  whatsapp    String
+  purpose     String   // Pesan Custom | Tanya Harga | Kunjungan | Partnership | Lainnya
+  interest    String?
+  budget      String?
+  message     String
+  reference   String?
+  status      String   @default("NEW") // NEW | READ | IN_PROGRESS | DONE | REJECTED
+  assigneeId  String?
+  assignee    User?    @relation("assignee", fields: [assigneeId], references: [id])
+  source      String?  @default("WEBSITE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PreOrder {
+  id              String   @id @default(cuid())
+  code            String   @unique
+  customerName    String
+  customerEmail   String
+  customerWa      String
+  sculptureType   String
+  material        String
+  sizeLabel       String
+  heightCm        Int?
+  finishing       String?
+  installation    Boolean  @default(false)
+  installAddress  String?
+  deadline        DateTime?
+  estimateMin     Int?
+  estimateMax     Int?
+  estimateWeeks   Int?
+  refImages       String   @default("[]")
+  notes           String?
+  status          String   @default("INQUIRY") // INQUIRY | CONSULT | QUOTED | NEGOTIATE | DEAL | PRODUCTION | FINISHING | READY | DONE | CANCELLED
+  dpPercent       Int?
+  paymentStatus   String   @default("UNPAID") // UNPAID | DP_PAID | PAID
+  milestones      String   @default("[]")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Booking {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  whatsapp    String
+  purpose     String
+  date        DateTime
+  timeSlot    String
+  notes       String?
+  status      String   @default("PENDING") // PENDING | CONFIRMED | DONE | CANCELLED | NOSHOW
+  resultNote  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id    String  @id @default(cuid())
+  key   String  @unique
+  value String
+}

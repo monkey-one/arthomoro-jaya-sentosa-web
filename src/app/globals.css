@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg-primary: #0D0C0A;
+  --color-bg-secondary: #1A1814;
+  --color-bg-card: #221F1A;
+  --color-accent-gold: #C8A96E;
+  --color-accent-bronze: #8B6914;
+  --color-accent-stone: #A89880;
+  --color-text-primary: #F2EDE6;
+  --color-text-secondary: #9C9080;
+  --color-border: #3A3530;
+  --color-highlight: #E8C87A;
+}
+
+html, body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-lato), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: rgba(200,169,110,0.35); color: #F2EDE6; }
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0D0C0A; }
+::-webkit-scrollbar-thumb { background: #3A3530; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #4D4640; }
+
+/* Heading defaults */
+h1, h2, h3, h4 { font-family: var(--font-playfair), serif; letter-spacing: -0.01em; }
+.font-cinzel { letter-spacing: 0.14em; }
+
+/* Decorative gold underline */
+.gold-underline {
+  display: inline-block;
+  position: relative;
+  padding-bottom: 8px;
+}
+.gold-underline::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #C8A96E, transparent);
+}
+
+/* Grain overlay */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 3px 3px;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Reveal-on-scroll */
+.reveal { opacity: 0; transform: translateY(20px); transition: all 0.8s cubic-bezier(0.22,1,0.36,1); }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+/* Marble/stone subtle texture */
+.bg-marble {
+  background-image:
+    radial-gradient(ellipse at top left, rgba(232,200,122,0.06), transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(168,152,128,0.05), transparent 50%),
+    linear-gradient(180deg, #0D0C0A 0%, #1A1814 100%);
+}
+
+/* Gallery card hover lift */
+.card-hover {
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease, border-color 0.4s ease;
+}
+.card-hover:hover { transform: translateY(-6px); border-color: rgba(200,169,110,0.45); box-shadow: 0 18px 50px -18px rgba(200,169,110,0.32); }
+
+/* Prose styles for article content */
+.prose-art {
+  color: #C9C0B2;
+  line-height: 1.85;
+  font-size: 17px;
+}
+.prose-art h2 { color: #F2EDE6; font-family: var(--font-playfair); font-size: 28px; margin-top: 2em; margin-bottom: 0.6em; }
+.prose-art h3 { color: #F2EDE6; font-family: var(--font-playfair); font-size: 22px; margin-top: 1.6em; margin-bottom: 0.5em; }
+.prose-art p { margin-bottom: 1.1em; }
+.prose-art ul, .prose-art ol { margin: 1em 0 1.4em 1.25em; }
+.prose-art ul li { list-style: disc; margin-bottom: 0.3em; }
+.prose-art ol li { list-style: decimal; margin-bottom: 0.3em; }
+.prose-art blockquote { border-left: 3px solid #C8A96E; padding: 0.4em 1.2em; color: #E8DCC2; font-family: var(--font-cormorant); font-style: italic; font-size: 22px; margin: 1.6em 0; }
+.prose-art a { color: #E8C87A; text-decoration: underline; text-underline-offset: 4px; }
+.prose-art strong { color: #F2EDE6; }
+
+/* Wizard step indicator */
+.step-dot {
+  width: 28px; height: 28px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #221F1A; border: 1px solid #3A3530; color: #9C9080; font-size: 13px;
+}
+.step-dot.active { background: linear-gradient(135deg,#C8A96E,#E8C87A); color: #0D0C0A; border-color: transparent; }
+.step-dot.done { background: #3a2f1a; color: #E8C87A; border-color: #8B6914; }
+
+/* Focus ring */
+:focus-visible { outline: 2px solid #C8A96E; outline-offset: 2px; border-radius: 4px; }
+
+/* Hide scrollbars on horizontal scrollers */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { scrollbar-width: none; }
+
+/* Tooltip animation */
+@keyframes tooltipIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+[data-radix-tooltip-content] { animation: tooltipIn 0.18s ease forwards; }

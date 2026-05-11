@@ -1,0 +1,15 @@
+import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { requirePermissionApi } from '@/lib/auth-guard'
+
+export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+  const { error } = await requirePermissionApi('pesan:view'); if (error) return error
+  try { await prisma.inquiry.update({ where: { id: params.id }, data: await req.json() }); return NextResponse.json({ ok: true }) }
+  catch (e: any) { return NextResponse.json({ ok: false, error: e.message }, { status: 400 }) }
+}
+
+export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+  const { error } = await requirePermissionApi('pesan:delete'); if (error) return error
+  try { await prisma.inquiry.delete({ where: { id: params.id } }); return NextResponse.json({ ok: true }) }
+  catch (e: any) { return NextResponse.json({ ok: false, error: e.message }, { status: 400 }) }
+}

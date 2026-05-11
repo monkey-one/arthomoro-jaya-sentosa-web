@@ -23,10 +23,10 @@ const VALUES = [
 ]
 
 const TEAM = [
-  { name: 'Pak Bambang', role: 'Founder & Kepala Pengrajin', bio: '30+ tahun pengalaman pemahatan marmer dan perunggu, pendiri studio.', photo: 'https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=600&q=80' },
-  { name: 'Ibu Sari',    role: 'Kepala Desain',           bio: 'Spesialis sculpting digital, 12 tahun pengalaman concept art.',     photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80' },
-  { name: 'Andi',         role: 'Pengrajin Senior',         bio: 'Ahli ukiran kayu dan relief tradisional, 18 tahun di studio kami.', photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80' },
-  { name: 'Putri',        role: 'Manajer Proyek',           bio: 'Koordinator pre-order & komunikasi klien.',                         photo: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80' },
+  { name: 'Pak Bambang', role: 'Founder & Kepala Pengrajin', bio: '30+ tahun pengalaman pemahatan marmer dan perunggu, pendiri studio.', photo: 'https://picsum.photos/seed/arthomoro-team-bambang/600/750' },
+  { name: 'Ibu Sari',    role: 'Kepala Desain',           bio: 'Spesialis sculpting digital, 12 tahun pengalaman concept art.',     photo: 'https://picsum.photos/seed/arthomoro-team-sari/600/750' },
+  { name: 'Andi',         role: 'Pengrajin Senior',         bio: 'Ahli ukiran kayu dan relief tradisional, 18 tahun di studio kami.', photo: 'https://picsum.photos/seed/arthomoro-team-andi/600/750' },
+  { name: 'Putri',        role: 'Manajer Proyek',           bio: 'Koordinator pre-order & komunikasi klien.',                         photo: 'https://picsum.photos/seed/arthomoro-team-putri/600/750' },
 ]
 
 const AWARDS = [
@@ -47,7 +47,7 @@ export default function TentangPage() {
         <div className="container grid items-center gap-12 lg:grid-cols-2">
           <Reveal>
             <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-line">
-              <Image src="https://images.unsplash.com/photo-1582461683670-69b2c1ef5e89?auto=format&fit=crop&w=1200&q=80" alt="Studio Arthomoro" fill className="object-cover" />
+              <Image src="https://picsum.photos/seed/arthomoro-studio/1200/1500" alt="Studio Arthomoro" fill className="object-cover" />
             </div>
           </Reveal>
           <Reveal delay={0.1}>

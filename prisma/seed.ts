@@ -26,27 +26,10 @@ const ROLE_DEFS: Record<string,{description:string; permissions:string[]}> = {
   'Viewer': { description: 'Read-only access laporan & data', permissions: PERMISSIONS_ALL.filter(p => p.endsWith(':view')) },
 }
 
-const UNSPLASH = (q: string, w = 1200, h = 1600, sig = 1) => `https://images.unsplash.com/photo-${q}?auto=format&fit=crop&w=${w}&h=${h}&q=80`
-
-// Curated sculpture / craftsmanship photos from Unsplash
-const SCULPTURE_IMAGES = [
-  '1582461683670-69b2c1ef5e89', // marble bust
-  '1577083287083-f3e2bf8f3a32', // gallery sculpture
-  '1565060169187-5284992f1934', // bronze figure
-  '1578926375605-b8c6b6e8a5e3', // wood carving
-  '1547333590-47fae5f58d21', // hands sculpting
-  '1547333590-47fae5f58d21',
-  '1578307744037-fe22a7716fea',
-  '1532601224476-15c79f2f7a51',
-  '1583521214690-73421a1829a9',
-  '1565060169123-49a5d20fcc0c',
-  '1532619675605-1ede6c2ed2b0',
-  '1578307744037-fe22a7716fea',
-]
-
-function img(i: number, w=1200, h=1500) {
-  const id = SCULPTURE_IMAGES[i % SCULPTURE_IMAGES.length]
-  return `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${h}&q=80`
+// Stable seeded photo URLs from picsum.photos (always 200 OK, varied content).
+function img(i: number, w = 1200, h = 1500) {
+  const seed = `arthomoro-art-${i + 1}`
+  return `https://picsum.photos/seed/${seed}/${w}/${h}`
 }
 
 async function main() {

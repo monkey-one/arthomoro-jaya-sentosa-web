@@ -25,12 +25,12 @@ const PROCESS_STEPS = [
 ]
 
 const CATEGORIES = [
-  { name: 'Patung Wajah', desc: 'Realistis dari foto.', minPrice: 8_500_000, image: 'https://images.unsplash.com/photo-1577083287083-f3e2bf8f3a32?auto=format&fit=crop&w=1200&q=80' },
-  { name: 'Patung Figur', desc: 'Figur penuh berkarakter.', minPrice: 15_000_000, image: 'https://images.unsplash.com/photo-1565060169187-5284992f1934?auto=format&fit=crop&w=1200&q=80' },
-  { name: 'Patung Abstrak', desc: 'Bentuk ekspresif modern.', minPrice: 12_000_000, image: 'https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&w=1200&q=80' },
-  { name: 'Patung Monumental', desc: 'Untuk ruang publik.', minPrice: 180_000_000, image: 'https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?auto=format&fit=crop&w=1200&q=80' },
-  { name: 'Relief', desc: 'Karya dinding 3D.', minPrice: 9_500_000, image: 'https://images.unsplash.com/photo-1583521214690-73421a1829a9?auto=format&fit=crop&w=1200&q=80' },
-  { name: 'Patung Hewan', desc: 'Anatomi presisi.', minPrice: 11_000_000, image: 'https://images.unsplash.com/photo-1578307744037-fe22a7716fea?auto=format&fit=crop&w=1200&q=80' },
+  { name: 'Patung Wajah', desc: 'Realistis dari foto.', minPrice: 8_500_000, image: 'https://picsum.photos/seed/arthomoro-cat-wajah/1200/1500' },
+  { name: 'Patung Figur', desc: 'Figur penuh berkarakter.', minPrice: 15_000_000, image: 'https://picsum.photos/seed/arthomoro-cat-figur/1200/1500' },
+  { name: 'Patung Abstrak', desc: 'Bentuk ekspresif modern.', minPrice: 12_000_000, image: 'https://picsum.photos/seed/arthomoro-cat-abstrak/1200/1500' },
+  { name: 'Patung Monumental', desc: 'Untuk ruang publik.', minPrice: 180_000_000, image: 'https://picsum.photos/seed/arthomoro-cat-monumental/1200/1500' },
+  { name: 'Relief', desc: 'Karya dinding 3D.', minPrice: 9_500_000, image: 'https://picsum.photos/seed/arthomoro-cat-relief/1200/1500' },
+  { name: 'Patung Hewan', desc: 'Anatomi presisi.', minPrice: 11_000_000, image: 'https://picsum.photos/seed/arthomoro-cat-hewan/1200/1500' },
 ]
 
 const ADVANTAGES = [
@@ -64,7 +64,7 @@ export default async function HomePage() {
       <section className="relative -mt-24 flex min-h-screen items-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1582461683670-69b2c1ef5e89?auto=format&fit=crop&w=2400&q=80"
+            src="https://picsum.photos/seed/arthomoro-hero/2400/1400"
             alt="Patung marmer karya Arthomoro"
             fill priority
             className="object-cover opacity-50"
@@ -241,7 +241,7 @@ export default async function HomePage() {
         <div className="container grid items-center gap-12 lg:grid-cols-2">
           <Reveal>
             <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-line">
-              <Image src="https://images.unsplash.com/photo-1547333590-47fae5f58d21?auto=format&fit=crop&w=1200&q=80" alt="Pengrajin Arthomoro" fill className="object-cover" />
+              <Image src="https://picsum.photos/seed/arthomoro-artisan/1200/1500" alt="Pengrajin Arthomoro" fill className="object-cover" />
             </div>
           </Reveal>
           <div>
@@ -324,7 +324,7 @@ export default async function HomePage() {
       {/* ===== CTA ===== */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <Image src="https://images.unsplash.com/photo-1547333590-47fae5f58d21?auto=format&fit=crop&w=2000&q=80" alt="" fill className="object-cover opacity-25" />
+          <Image src="https://picsum.photos/seed/arthomoro-cta/2000/1200" alt="" fill className="object-cover opacity-25" />
           <div className="absolute inset-0 bg-gradient-to-b from-bg-primary via-bg-primary/85 to-bg-primary" />
         </div>
         <div className="container relative z-10 py-24 text-center">

@@ -11,7 +11,9 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },
       { protocol: 'https', hostname: 'picsum.photos' },
+      { protocol: 'https', hostname: 'fastly.picsum.photos' },
     ],
+    minimumCacheTTL: 60 * 60 * 24,
   },
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,

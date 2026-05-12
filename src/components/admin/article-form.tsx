@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Input, Label, Select, Textarea } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { HelpHint } from '@/components/ui/tooltip'
+import { FileUploader } from '@/components/admin/file-uploader'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { slugify } from '@/lib/utils'
@@ -42,7 +43,7 @@ export function ArticleForm({ initial }: { initial?: any }) {
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || 'Gagal menyimpan')
       toast.success('Tersimpan')
-      router.push(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/admin/artikel`); router.refresh()
+      router.push('/admin/artikel'); router.refresh()
     } catch (e: any) { toast.error(e.message) } finally { setLoading(false) }
   }
 
@@ -71,9 +72,17 @@ export function ArticleForm({ initial }: { initial?: any }) {
         </div>
 
         <div className="rounded-lg border border-line bg-bg-card p-5">
-          <h3 className="font-display text-base">Cover</h3>
-          <Label required>URL Gambar</Label>
-          <Input value={f.coverImage} onChange={e => update({ coverImage: e.target.value })} required placeholder="https://…" />
+          <h3 className="font-display text-base">Cover Artikel</h3>
+          <div className="mt-3">
+            <FileUploader
+              kind="image"
+              folder="article"
+              value={f.coverImage}
+              onChange={url => update({ coverImage: url })}
+              required
+              hint={<HelpHint text="Foto cover artikel. Ideal 16:9 atau 16:10." />}
+            />
+          </div>
         </div>
 
         <Button type="submit" size="lg" className="w-full" disabled={loading}>{loading && <Loader2 className="h-4 w-4 animate-spin" />} {initial?.id ? 'Simpan Perubahan' : 'Publish'}</Button>

@@ -5,7 +5,8 @@ import { NextResponse } from 'next/server'
 
 export async function requireAdminSession() {
   const session = await getServerSession(authOptions)
-  if (!session?.user) redirect(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/admin/login`)
+  // Next's redirect() honors the configured basePath, so pass a path WITHOUT prefix.
+  if (!session?.user) redirect('/admin/login')
   return session
 }
 
@@ -13,7 +14,7 @@ export async function requirePermissionPage(perm: string) {
   const session = await requireAdminSession()
   const u = session.user as any
   if (u.roleName === 'Super Admin') return session
-  if (!(u.permissions || []).includes(perm)) redirect(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/admin`)
+  if (!(u.permissions || []).includes(perm)) redirect('/admin')
   return session
 }
 

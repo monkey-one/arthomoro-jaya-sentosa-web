@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
 import { PageHeader } from '@/components/site/page-header'
 import { Badge } from '@/components/ui/badge'
-import { formatDate } from '@/lib/utils'
+import { formatDate, isUploadedAsset } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,7 +30,7 @@ export default async function ArtikelPage({ searchParams }: { searchParams: Reco
               {articles.map(a => (
                 <Link key={a.id} href={`/artikel/${a.slug}`} className="card-hover overflow-hidden rounded-lg border border-line bg-bg-card">
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    <Image src={a.coverImage} alt={a.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <Image src={a.coverImage} alt={a.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" unoptimized={isUploadedAsset(a.coverImage)} />
                   </div>
                   <div className="p-5">
                     <Badge variant="gold">{a.category}</Badge>

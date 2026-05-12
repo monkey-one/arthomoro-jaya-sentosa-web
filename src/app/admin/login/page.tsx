@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Input, Label } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -10,9 +10,11 @@ import { Loader2, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function AdminLoginPage() {
-  const router = useRouter()
   const params = useSearchParams()
-  const callback = params.get('callbackUrl') || (`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/admin`)
+  const BASE = process.env.NEXT_PUBLIC_BASE_PATH || ''
+  // callbackUrl from query is the absolute path AS-IS (already includes basePath).
+  // Default is the admin dashboard (with basePath).
+  const callback = params.get('callbackUrl') || `${BASE}/admin`
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState<string | null>(null)
 
@@ -28,7 +30,12 @@ export default function AdminLoginPage() {
     })
     setLoading(false)
     if (res?.error) { setErr('Email atau password salah'); toast.error('Login gagal') }
-    else { toast.success('Berhasil masuk'); router.push(callback) }
+    else {
+      toast.success('Berhasil masuk')
+      // Hard navigation: avoids Next router prepending basePath again to a path
+      // that already contains it (which caused the doubled-prefix 404).
+      window.location.href = callback
+    }
   }
 
   return (

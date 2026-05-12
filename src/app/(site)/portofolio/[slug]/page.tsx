@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { PageHeader } from '@/components/site/page-header'
 import { Badge } from '@/components/ui/badge'
-import { safeJSON } from '@/lib/utils'
+import { safeJSON, isUploadedAsset } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -23,13 +23,13 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
         <div className="container grid gap-10 lg:grid-cols-[1.5fr,1fr]">
           <div>
             <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-line">
-              <Image src={images[0]} alt={p.title} fill priority className="object-cover" />
+              <Image src={images[0]} alt={p.title} fill priority className="object-cover" unoptimized={isUploadedAsset(images[0])} />
             </div>
             {images.length > 1 && (
               <div className="mt-3 grid grid-cols-3 gap-3 md:grid-cols-4">
                 {images.slice(1).map((src,i) => (
                   <div key={i} className="relative aspect-[4/3] overflow-hidden rounded-md border border-line">
-                    <Image src={src} alt={`Galeri ${i+2}`} fill sizes="240px" className="object-cover" />
+                    <Image src={src} alt={`Galeri ${i+2}`} fill sizes="240px" className="object-cover" unoptimized={isUploadedAsset(src)} />
                   </div>
                 ))}
               </div>

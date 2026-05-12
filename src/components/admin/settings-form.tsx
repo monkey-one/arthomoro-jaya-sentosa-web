@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Input, Label, Textarea } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { HelpHint } from '@/components/ui/tooltip'
+import { FileUploader } from '@/components/admin/file-uploader'
 import { Loader2, Save } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -31,6 +32,35 @@ export function SettingsForm({ groups, initial }: { groups: Group[]; initial: Re
 
   return (
     <div className="space-y-6">
+      {/* Hero media — uploaded video + image */}
+      <section className="rounded-lg border border-accent-gold/40 bg-bg-card p-6">
+        <h2 className="font-display text-xl">Media Beranda (Hero)</h2>
+        <p className="mt-1 text-sm text-ink-secondary">Unggah video atau foto yang akan tampil sebagai background hero di halaman beranda. Jika video diisi, video akan diprioritaskan dan diputar secara otomatis (tanpa suara, looping). Jika kosong, gunakan foto.</p>
+
+        <div className="mt-5 grid gap-6 md:grid-cols-2">
+          <div>
+            <FileUploader
+              kind="video"
+              folder="hero"
+              value={data['hero_video_url'] || ''}
+              onChange={url => update('hero_video_url', url)}
+              label="Video Hero (opsional)"
+              hint={<HelpHint text="Format MP4 atau WebM, maks 50 MB. Direkomendasikan rasio 16:9 atau 16:10, 1080p, durasi 10–25 detik, tanpa audio." />}
+            />
+          </div>
+          <div>
+            <FileUploader
+              kind="image"
+              folder="hero"
+              value={data['hero_image_url'] || ''}
+              onChange={url => update('hero_image_url', url)}
+              label="Foto Hero (fallback)"
+              hint={<HelpHint text="Foto yang dipakai jika video belum diunggah, atau sebagai poster sebelum video memuat. Ideal 2400×1400px." />}
+            />
+          </div>
+        </div>
+      </section>
+
       {groups.map(g => (
         <section key={g.title} className="rounded-lg border border-line bg-bg-card p-6">
           <h2 className="font-display text-xl">{g.title}</h2>

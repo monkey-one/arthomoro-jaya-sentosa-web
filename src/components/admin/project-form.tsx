@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation'
 import { Input, Label, Select, Textarea } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { HelpHint } from '@/components/ui/tooltip'
+import { FileUploader, MultiImageUploader } from '@/components/admin/file-uploader'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { slugify } from '@/lib/utils'
+import { slugify, safeJSON } from '@/lib/utils'
 
 export function ProjectForm({ initial }: { initial?: any }) {
   const router = useRouter()
@@ -20,7 +21,7 @@ export function ProjectForm({ initial }: { initial?: any }) {
     dimensions: initial?.dimensions || '', description: initial?.description || '',
     challenge: initial?.challenge || '', solution: initial?.solution || '',
     duration: initial?.duration || '', coverImage: initial?.coverImage || '',
-    images: initial?.images || '[]',
+    galleryImages: initial?.images ? safeJSON<string[]>(typeof initial.images === 'string' ? initial.images : JSON.stringify(initial.images), []) : [],
     featured: !!initial?.featured, published: initial?.published ?? true,
   })
   const update = (p: Partial<typeof f>) => setF(s => ({ ...s, ...p }))
@@ -29,7 +30,9 @@ export function ProjectForm({ initial }: { initial?: any }) {
     e.preventDefault(); setLoading(true)
     try {
       const slug = f.slug || slugify(f.title)
-      const payload = { ...f, slug, year: Number(f.year) }
+      const { galleryImages, ...rest } = f
+      const payload = { ...rest, slug, year: Number(f.year), images: JSON.stringify(galleryImages) }
+      if (!payload.coverImage) throw new Error('Cover foto wajib diunggah')
       const isEdit = !!initial?.id
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/admin/project${isEdit ? `/${initial.id}` : ''}`, {
         method: isEdit ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
@@ -37,7 +40,7 @@ export function ProjectForm({ initial }: { initial?: any }) {
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || 'Gagal menyimpan')
       toast.success('Tersimpan')
-      router.push(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/admin/portofolio`); router.refresh()
+      router.push('/admin/portofolio'); router.refresh()
     } catch (e: any) { toast.error(e.message) } finally { setLoading(false) }
   }
 
@@ -73,10 +76,10 @@ export function ProjectForm({ initial }: { initial?: any }) {
           </div>
         </div>
         <div className="rounded-lg border border-line bg-bg-card p-5">
-          <h3 className="font-display text-base">Gambar</h3>
-          <div className="mt-3 space-y-3">
-            <div><Label required>Cover URL</Label><Input value={f.coverImage} onChange={e => update({ coverImage: e.target.value })} required /></div>
-            <div><Label hint={<HelpHint text="Array JSON URL gambar tambahan." />}>Gambar Tambahan (JSON)</Label><Textarea value={f.images} onChange={e => update({ images: e.target.value })} rows={3} className="font-mono text-xs" /></div>
+          <h3 className="font-display text-base">Foto Proyek</h3>
+          <div className="mt-3 space-y-4">
+            <FileUploader kind="image" folder="project" value={f.coverImage} onChange={url => update({ coverImage: url })} label="Foto Cover" required />
+            <MultiImageUploader folder="project" value={f.galleryImages} onChange={imgs => update({ galleryImages: imgs })} label="Galeri Foto Proyek" hint={<HelpHint text="Foto proses, hasil akhir, instalasi. Hingga 8 foto." />} />
           </div>
         </div>
         <Button type="submit" size="lg" className="w-full" disabled={loading}>{loading && <Loader2 className="h-4 w-4 animate-spin" />} {initial?.id ? 'Simpan' : 'Buat Proyek'}</Button>

@@ -47,3 +47,14 @@ export function formatDate(d: Date | string | null | undefined, opts: Intl.DateT
 export function waLink(message: string, number = process.env.NEXT_PUBLIC_WA_NUMBER || '6281234567890') {
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 }
+
+/**
+ * Returns true for paths served outside the Next.js standalone server
+ * (admin-uploaded files via the nginx /uploads alias). The image optimizer
+ * cannot reach those paths in production, so we bypass it.
+ */
+export function isUploadedAsset(url: string | null | undefined) {
+  if (!url) return false
+  if (url.startsWith('http')) return false
+  return url.includes('/uploads/')
+}

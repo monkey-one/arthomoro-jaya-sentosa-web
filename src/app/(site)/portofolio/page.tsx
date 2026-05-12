@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
 import { PageHeader } from '@/components/site/page-header'
 import { Badge } from '@/components/ui/badge'
+import { isUploadedAsset } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,7 +34,7 @@ export default async function PortofolioPage({ searchParams }: { searchParams: R
             {projects.map(p => (
               <Link key={p.id} href={`/portofolio/${p.slug}`} className="card-hover group overflow-hidden rounded-lg border border-line bg-bg-card">
                 <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image src={p.coverImage} alt={p.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <Image src={p.coverImage} alt={p.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" unoptimized={isUploadedAsset(p.coverImage)} />
                   <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/90 to-transparent" />
                   <div className="absolute left-3 top-3"><Badge variant="gold">{p.clientType}</Badge></div>
                 </div>

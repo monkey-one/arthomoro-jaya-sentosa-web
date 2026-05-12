@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation'
 import { Input, Label, Select, Textarea } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { HelpHint } from '@/components/ui/tooltip'
+import { FileUploader, MultiImageUploader } from '@/components/admin/file-uploader'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { slugify } from '@/lib/utils'
+import { slugify, safeJSON } from '@/lib/utils'
 
 const CATEGORIES = ['Patung Wajah','Patung Figur','Patung Abstrak','Patung Monumental','Relief','Patung Hewan']
 const MATERIALS  = ['Marmer','Perunggu','Kayu','Resin','Granit','Mixed Media']
@@ -41,7 +42,7 @@ export function ArtworkForm({ initial }: { initial?: any }) {
     priceRangeMax: initial?.priceRangeMax || '',
     productionWeeks: initial?.productionWeeks || 6,
     coverImage: initial?.coverImage || '',
-    images: initial?.images ? (typeof initial.images === 'string' ? initial.images : JSON.stringify(initial.images)) : '[]',
+    galleryImages: initial?.images ? safeJSON<string[]>(typeof initial.images === 'string' ? initial.images : JSON.stringify(initial.images), []) : [],
     featured: !!initial?.featured,
     published: initial?.published ?? true,
   })
@@ -53,21 +54,24 @@ export function ArtworkForm({ initial }: { initial?: any }) {
     setLoading(true)
     try {
       const slug = f.slug || slugify(f.title)
+      const { galleryImages, ...rest } = f
       const payload = {
-        ...f,
+        ...rest,
         slug,
         year: f.year ? Number(f.year) : null,
         priceRangeMin: f.priceRangeMin ? Number(f.priceRangeMin) : null,
         priceRangeMax: f.priceRangeMax ? Number(f.priceRangeMax) : null,
         productionWeeks: f.productionWeeks ? Number(f.productionWeeks) : null,
+        images: JSON.stringify(galleryImages),
       }
+      if (!payload.coverImage) throw new Error('Cover foto wajib diunggah')
       const isEdit = !!initial?.id
       const url = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/admin/artwork${isEdit ? `/${initial.id}` : ''}`
       const res = await fetch(url, { method: isEdit ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || 'Gagal menyimpan')
       toast.success('Tersimpan')
-      router.push(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/admin/galeri`)
+      router.push('/admin/galeri')
       router.refresh()
     } catch (err: any) { toast.error(err.message) }
     finally { setLoading(false) }
@@ -161,16 +165,24 @@ export function ArtworkForm({ initial }: { initial?: any }) {
         </div>
 
         <div className="rounded-lg border border-line bg-bg-card p-5">
-          <h3 className="font-display text-base">Gambar</h3>
-          <div className="mt-3 space-y-3">
-            <div>
-              <Label required hint={<HelpHint text="URL gambar utama (jpg/png/webp). Gunakan layanan seperti Cloudinary atau Unsplash." />}>Cover Image (URL)</Label>
-              <Input value={f.coverImage} onChange={e => update({ coverImage: e.target.value })} required placeholder="https://…" />
-            </div>
-            <div>
-              <Label hint={<HelpHint text="Array JSON URL gambar tambahan. Contoh: ['url1','url2']" />}>Gambar Tambahan (JSON Array)</Label>
-              <Textarea value={f.images} onChange={e => update({ images: e.target.value })} rows={3} placeholder='["https://...","https://..."]' />
-            </div>
+          <h3 className="font-display text-base">Foto Karya</h3>
+          <div className="mt-3 space-y-4">
+            <FileUploader
+              kind="image"
+              folder="artwork"
+              value={f.coverImage}
+              onChange={url => update({ coverImage: url })}
+              label="Foto Cover"
+              required
+              hint={<HelpHint text="Foto utama yang muncul di kartu galeri dan halaman detail. JPG/PNG/WebP, maks 50 MB." />}
+            />
+            <MultiImageUploader
+              folder="artwork"
+              value={f.galleryImages}
+              onChange={imgs => update({ galleryImages: imgs })}
+              label="Galeri Foto Tambahan"
+              hint={<HelpHint text="Hingga 8 foto sudut/tampak yang berbeda. Akan dipakai di slider detail karya." />}
+            />
           </div>
         </div>
 

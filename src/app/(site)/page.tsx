@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
 import { getSettings } from '@/lib/settings'
-import { waLink, priceRange } from '@/lib/utils'
+import { waLink, priceRange, isUploadedAsset } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Counter } from '@/components/ui/counter'
 import { Reveal, Stagger, StaggerItem } from '@/components/ui/reveal'
@@ -63,12 +63,26 @@ export default async function HomePage() {
       {/* ===== HERO ===== */}
       <section className="relative -mt-24 flex min-h-screen items-center overflow-hidden">
         <div className="absolute inset-0">
-          <Image
-            src="https://picsum.photos/seed/arthomoro-hero/2400/1400"
-            alt="Patung marmer karya Arthomoro"
-            fill priority
-            className="object-cover opacity-50"
-          />
+          {settings['hero_video_url'] ? (
+            <video
+              src={settings['hero_video_url']}
+              poster={settings['hero_image_url'] || undefined}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="absolute inset-0 h-full w-full object-cover opacity-55"
+            />
+          ) : (
+            <Image
+              src={settings['hero_image_url'] || 'https://picsum.photos/seed/arthomoro-hero/2400/1400'}
+              alt="Patung marmer karya Arthomoro"
+              fill priority
+              className="object-cover opacity-50"
+              unoptimized={!!settings['hero_image_url']}
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/30 via-bg-primary/60 to-bg-primary" />
           <div className="absolute inset-0 bg-gold-radial" />
         </div>
@@ -221,7 +235,7 @@ export default async function HomePage() {
               {featuredProjects.map(p => (
                 <Link key={p.id} href={`/portofolio/${p.slug}`} className="group relative w-[88vw] shrink-0 snap-start overflow-hidden rounded-lg border border-line bg-bg-card sm:w-[520px]">
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    <Image src={p.coverImage} alt={p.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <Image src={p.coverImage} alt={p.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" unoptimized={isUploadedAsset(p.coverImage)} />
                     <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/90 to-transparent" />
                   </div>
                   <div className="p-5">
@@ -302,7 +316,7 @@ export default async function HomePage() {
               <StaggerItem key={art.id}>
                 <Link href={`/artikel/${art.slug}`} className="card-hover block overflow-hidden rounded-lg border border-line bg-bg-card">
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    <Image src={art.coverImage} alt={art.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <Image src={art.coverImage} alt={art.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" unoptimized={isUploadedAsset(art.coverImage)} />
                   </div>
                   <div className="p-5">
                     <Badge variant="gold">{art.category}</Badge>

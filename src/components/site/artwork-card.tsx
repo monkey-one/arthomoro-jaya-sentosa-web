@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Heart, ArrowUpRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { priceRange } from '@/lib/utils'
+import { priceRange, isUploadedAsset } from '@/lib/utils'
 
 export interface ArtworkCardData {
   slug: string
@@ -32,6 +32,7 @@ export function ArtworkCard({ a, priority = false }: { a: ArtworkCardData; prior
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
           priority={priority}
+          unoptimized={isUploadedAsset(a.coverImage)}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/30 to-transparent opacity-90" />
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">

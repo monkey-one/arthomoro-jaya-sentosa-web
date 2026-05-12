@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { PageHeader } from '@/components/site/page-header'
 import { Badge } from '@/components/ui/badge'
-import { formatDate } from '@/lib/utils'
+import { formatDate, isUploadedAsset } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ChevronRight } from 'lucide-react'
 
@@ -30,7 +30,7 @@ export default async function ArticleDetailPage({ params }: { params: { slug: st
           </div>
 
           <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-lg border border-line">
-            <Image src={article.coverImage} alt={article.title} fill priority className="object-cover" />
+            <Image src={article.coverImage} alt={article.title} fill priority className="object-cover" unoptimized={isUploadedAsset(article.coverImage)} />
           </div>
 
           <div className="prose-art" dangerouslySetInnerHTML={{ __html: article.content }} />
@@ -53,7 +53,7 @@ export default async function ArticleDetailPage({ params }: { params: { slug: st
             <div className="grid gap-5 md:grid-cols-3">
               {related.map(r => (
                 <Link key={r.id} href={`/artikel/${r.slug}`} className="card-hover overflow-hidden rounded-lg border border-line bg-bg-card">
-                  <div className="relative aspect-[16/10]"><Image src={r.coverImage} alt={r.title} fill className="object-cover" /></div>
+                  <div className="relative aspect-[16/10]"><Image src={r.coverImage} alt={r.title} fill className="object-cover" unoptimized={isUploadedAsset(r.coverImage)} /></div>
                   <div className="p-4">
                     <p className="font-display text-base leading-tight line-clamp-2">{r.title}</p>
                   </div>

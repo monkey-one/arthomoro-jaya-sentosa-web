@@ -7,6 +7,7 @@ import { Table, THead, Th, Tr, Td } from '@/components/admin/table'
 import { DeleteButton } from '@/components/admin/delete-button'
 import { Badge } from '@/components/ui/badge'
 import { Edit3, Eye } from 'lucide-react'
+import { isUploadedAsset } from '@/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +24,7 @@ export default async function AdminPortofolioPage() {
             <Tr key={p.id}>
               <Td>
                 <div className="flex items-center gap-3">
-                  <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md border border-line"><Image src={p.coverImage} alt={p.title} fill sizes="64px" className="object-cover" /></div>
+                  <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md border border-line"><Image src={p.coverImage} alt={p.title} fill sizes="64px" className="object-cover" unoptimized={isUploadedAsset(p.coverImage)} /></div>
                   <p className="font-medium">{p.title}</p>
                 </div>
               </Td>

@@ -33,7 +33,11 @@ export async function POST(req: Request) {
   const stamp = Date.now().toString(36)
   const filename = `${stamp}-${hash}.${ext}`
 
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads', folder)
+  // In production the standalone server chdir's into .next/standalone, so we
+  // can't rely on process.cwd(). Caller can set UPLOAD_DIR to an absolute path
+  // (typically /var/www/<app>/public/uploads). Fallback to <cwd>/public/uploads.
+  const baseDir = process.env.UPLOAD_DIR || path.join(process.cwd(), 'public', 'uploads')
+  const uploadDir = path.join(baseDir, folder)
   await mkdir(uploadDir, { recursive: true })
 
   const buf = Buffer.from(await file.arrayBuffer())
